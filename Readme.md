@@ -1,24 +1,40 @@
-# Урок 4 - Работа с Моделями и миграциями
+# Урок 5 - Работа с Моделями и миграциями
 
 ### Цель:
-* Создать модель и миграции
-* Научится работать с административной панели
-* Изучить работу консоли разработчика
+* Создать новые модуля с моделями для базы данных
+* Научится понимать где и какие связи стоит принимать
+* Создать связи `Многие-ко-Многим`, `Один-к-Одному`, `Один-ко-Многим`
+
 
 ### Задачи:
-* Создайте дополнительное поле `description` в таблице категорий (`char`, `null`)
-* Измените поле `name` в категориях: уникальные значения
-* Создайте модуль `products` с таблицей товаров (`product`):
-  * `name` (`char`, `unique`)
-  * `description` (`char`, `null`)
-  * `cost` (`int`)
-  * `ordered` (`int`, `default = 0`)
-* Создайте модуль `brands` с таблицей брендов (`brand`):
-  * `name` (`char`, `unique`)
+* Для модели `Product` создайте связи с моделями `Brand`, `Category` (`one-to-many`, many brands/categories has one product)
+Product:
+  * `brand_id`
+  * `category_id`
+* Создайте модель Customer (заказчики)
+  * `id`: int
+  * `name`: String
+  * `email`: String, unique
+* Создайте модель Order (заказы)
+  * `id`: int 
+  * `customer_id`: User (Заказчик)
+  * `amount`: Int (Общая стоимость)
+  * `created_at`: Datetime (Дата заказа)
+* Для модели `Order` и `Product` создайте связь многие ко многим (Товары в заказе)
 
-###Ссылки на документацию
-* Изучение Моделей - https://docs.djangoproject.com/en/4.0/topics/db/models/
-* Типы полей в моделях - https://docs.djangoproject.com/en/4.0/ref/models/fields/
-* Создание моделей и миграций | Обновление моделей - https://docs.djangoproject.com/en/4.0/intro/tutorial02/
-* Миграции - https://docs.djangoproject.com/en/4.0/topics/migrations/
-* Создание запросов в ORM - https://docs.djangoproject.com/en/4.0/topics/db/queries/
+### Примеры полей таблиц в административной панели
+1. Товар, связь с категориями и брендом
+![Товар, связь с категориями и брендом](screen/streen_test_product.png)
+
+2. Категория
+  ![Категория](screen/screen_categories.png)
+
+3. Бренды
+![Бренды](screen/screen_brands.png)
+4. Таблицы со связями для заказов
+![](screen/screen_orders_table.png)
+
+### Документация
+1. Один к одному - https://docs.djangoproject.com/en/4.0/topics/db/examples/one_to_one/
+2. Один ко многим - https://docs.djangoproject.com/en/4.0/topics/db/examples/many_to_one/
+3. Многие ко многим - https://docs.djangoproject.com/en/4.0/topics/db/examples/many_to_many/
