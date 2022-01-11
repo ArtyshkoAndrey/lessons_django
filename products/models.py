@@ -15,13 +15,15 @@ class Product(models.Model):
         Brand,
         null=True,
         on_delete=models.SET_NULL,
-        primary_key=False
+        primary_key=False,
+        related_name='products'
     )
     category = models.ForeignKey(
         Category,
         null=True,
         on_delete=models.SET_NULL,
-        primary_key=False
+        primary_key=False,
+        related_name = 'products'
     )
 
     def __str__(self):

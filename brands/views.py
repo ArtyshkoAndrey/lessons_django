@@ -2,10 +2,12 @@ import json
 
 from django.core import serializers
 from django.http import Http404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from .serialiers import BrandSerializer
 
 from . import forms
 from .models import Brand
+from products.models import Product
 
 
 def index(request):
@@ -51,10 +53,11 @@ def create(request):
 def show(request, id):
     if request.method == 'GET':
         brand = Brand.objects.get(id=id)
+        brand.products.add(Product.objects.first())
         # Сериaлизация данных
-        data = serializers.serialize("json", [brand], fields=('name', 'description'))
+        brand_serializer = BrandSerializer(instance=brand)
 
         # Возвращаем JSON ответ пользователю
-        return HttpResponse(data[1:-1], content_type="application/json")
+        return JsonResponse(brand_serializer.data)
     else:
         return Http404()
