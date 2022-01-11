@@ -3,11 +3,11 @@ import json
 from django.core import serializers
 from django.http import Http404
 from django.http import HttpResponse, JsonResponse
-from .serialiers import BrandSerializer
 
+from products.models import Product
 from . import forms
 from .models import Brand
-from products.models import Product
+from .serialiers import BrandSerializer
 
 
 def index(request):
@@ -59,5 +59,37 @@ def show(request, id):
 
         # Возвращаем JSON ответ пользователю
         return JsonResponse(brand_serializer.data)
+    else:
+        return Http404()
+
+
+def update(request, id):
+    # Проверяем что бы был POST запрос, иначе 404 ошибка
+    if request.method == 'POST':
+        # Создаём экземпляр валидатора с POST данными
+        brand = Brand.objects.get(id=id)
+        form = forms.BrandValidate(request.POST or None, instance=brand)
+
+        # Если данные верны, то обновим бренд и вернём ответ
+        if form.is_valid():
+            form.save()
+            data = json.dumps({'save': 'True'})
+            return HttpResponse(data, content_type="application/json")
+
+        # Возвращаем JSON ответ об ошибке
+        data = json.dumps({'save': 'False'})
+        return HttpResponse(data, content_type="application/json")
+    else:
+        return Http404()
+
+
+def delete(request, id):
+    # Проверяем что бы был POST запрос, иначе 404 ошибка
+    if request.method == 'DELETE':
+        # Создаём экземпляр валидатора с POST данными
+        brand = Brand.objects.get(id=id)
+        brand.delete()
+        data = json.dumps({'save': 'True'})
+        return HttpResponse(data, content_type="application/json")
     else:
         return Http404()
